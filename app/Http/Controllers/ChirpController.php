@@ -54,6 +54,9 @@ class ChirpController extends Controller
      */
     public function edit(Chirp $chirp)
     {
+        if (auth()->user()->isNot($chirp->user)) {
+            abort(403);
+        }
         return view('chirps.edit', [
             'chirp'=> $chirp
         ]);
@@ -64,7 +67,18 @@ class ChirpController extends Controller
      */
     public function update(Request $request, Chirp $chirp)
     {
-        return 'update';
+        if (auth()->user()->isNot($chirp->user)) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'message' => ['required', 'min:3', 'max:255']
+        ]);
+
+        $chirp ->update($validated);
+
+        return to_route('chirps.index')
+        ->with('status', __(('Chirp updated Succesfully!')));
     }
 
     /**

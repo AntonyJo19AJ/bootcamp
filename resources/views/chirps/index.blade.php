@@ -33,11 +33,15 @@
                             <div>
                                 <span class="text-gray-800 dark:text-gray-200">{{ $chirp -> user -> name }}</span>
                                 <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $chirp -> created_at -> format('J M Y, g:i a') }}</small>
+                                @if ($chirp -> created_at != $chirp -> updated_at)
+                                <small class="text-sm text-gray-600 dark:text-gray-400"> &middot; {{ __('edited') }}</small>
+                                @endif
                             </div>
                         </div>
                         <p class="mt-4 taxt-lg text-gray-900 dark:text-gray-100">{{ $chirp -> message }}</p>
                     </div>
-                    <x-dropdown>
+                    @if (auth()->user()->is($chirp->user))
+                        <x-dropdown>
                         <x-slot name="trigger">
                             <button>
                                 <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -51,6 +55,7 @@
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
+                    @endif
                 </div>
                 @endforeach
             </div>

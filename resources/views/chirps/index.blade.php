@@ -40,7 +40,7 @@
                         </div>
                         <p class="mt-4 taxt-lg text-gray-900 dark:text-gray-100">{{ $chirp -> message }}</p>
                     </div>
-                    @if (auth()->user()->is($chirp->user))
+                    @can('update',$chirp)
                         <x-dropdown>
                         <x-slot name="trigger">
                             <button>
@@ -53,9 +53,15 @@
                             <x-dropdown-link href="{{ route('chirps.edit', $chirp) }}">
                                 Edit
                             </x-dropdown-link>
+                            <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
+                                @csrf @method('DELETE')
+                                <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.clasest('form').submit();">
+                                {{ __('Delete') }}
+                                </x-dropdown-link>
+                            </form>
                         </x-slot>
                     </x-dropdown>
-                    @endif
+                    @endcan
                 </div>
                 @endforeach
             </div>
